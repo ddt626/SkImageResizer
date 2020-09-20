@@ -110,6 +110,21 @@ namespace SkImageResizer
             catch (OperationCanceledException)
             {
                 Console.WriteLine($"Cancel count:{allTasks.Count(a => a.IsCanceled)}");
+                foreach (var task in allTasks)
+                {
+                    switch (task.Status)
+                    {
+                        case TaskStatus.RanToCompletion:
+                            Console.WriteLine($"Task Id: {task.Id} complete");
+                            break;
+                        case TaskStatus.Canceled:
+                            Console.WriteLine($"Task Id: {task.Id} canceled");
+                            break;
+                        case TaskStatus.Faulted:
+                            Console.WriteLine($"Task Id: {task.Id} fault");
+                            break;
+                    } 
+                }
             }
         }
 
@@ -126,6 +141,7 @@ namespace SkImageResizer
 
                 var destinationWidth = (int) (sourceWidth * scale);
                 var destinationHeight = (int) (sourceHeight * scale);
+                cancellationToken.ThrowIfCancellationRequested();
                 using var scaledBitmap = bitmap.Resize(
                     new SKImageInfo(destinationWidth, destinationHeight),
                     SKFilterQuality.High);
