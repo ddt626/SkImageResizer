@@ -65,9 +65,9 @@ namespace SkImageResizer
             await Task.WhenAll(allTasks);
         }
 
-        private static async Task ResizeImageAsync(string destPath, double scale, string filePath)
+        private Task ResizeImageAsync(string destPath, double scale, string filePath)
         {
-            await Task.Run(() =>
+            return Task.Run(() =>
             {
                 var bitmap = SKBitmap.Decode(filePath);
                 var imgPhoto = SKImage.FromBitmap(bitmap);
